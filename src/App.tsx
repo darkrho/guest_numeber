@@ -1,34 +1,57 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
+import NumContainers from './components/NumContainer'
+import {useState} from 'react'
+
+// create a random number
+const randomNum = (min:number, max:number) => {
+	min = Math.ceil(min); 
+	max = Math.floor(max); 
+	return Math.floor(Math.random() * (max - min) + min); }
+
+// random numbers list
+let number_to_guest: number[];
+
 
 function App() {
-  const [count, setCount] = useState(0)
+  // input state
+  const [number, setNumber] = useState("");
+  const handleChange = (e) => {
+    console.log(e.target.value)
+    setNumber(e.target.value)
+  }
+  // create numbers
+  number_to_guest = [0,0,0,0,0].map( num => randomNum(num,10))
+  // create items with the random number and her representation
+  const  items = number_to_guest.map( (num) => {
+    return {num:num, representation: "*"}
+  })
+  console.log(items)
+
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="container">
+
+      {/* representation */}
+      <div className="number_repres">
+        {items.map( (item, idx) => {
+          return <NumContainers key={idx} item={item} />
+        })}
+
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+      
+      {/* guest inputs */}
+      <div className="number_user">
+        <input 
+          value={number} 
+          onChange={handleChange}
+        ></input>
+
+        {items.map( (item, idx) => {
+          return <input key={idx} type="text" className={item.representation} />
+        })}
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+     
+    </div>
   )
 }
 
