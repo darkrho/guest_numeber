@@ -1,5 +1,6 @@
 import './App.css'
 import NumContainers from './components/NumContainer'
+import InputComponent from './components/InputComponent'
 import {useState} from 'react'
 
 // create a random number
@@ -9,47 +10,57 @@ const randomNum = (min:number, max:number) => {
 	return Math.floor(Math.random() * (max - min) + min); }
 
 // random numbers list
-let number_to_guest: number[];
+const  number_to_guest = [0,0,0,0,0].map( num => randomNum(num,10))
 
 
 function App() {
+  
   // input state
-  const [number, setNumber] = useState("");
+  const [guest, setNumber] = useState([0,0,0,0,0]);
+  const [repre, setRepre] = useState(["*","*","*","*","*"])
+
   const handleChange = (e) => {
-    console.log(e.target.value)
-    setNumber(e.target.value)
+    const newGuest = [...guest]
+    newGuest[e.target.className] = e.target.value
+    setNumber(newGuest)
   }
+  const handleValidation = (guest,number_to_guest) => {
+    console.log(guest, number_to_guest)
+    guest.map( (num, idx) => {
+      num = Number(num)
+      if ( num === number_to_guest[idx]){
+        const newRepre = [...repre]
+        console.log(newRepre)
+        newRepre[idx] = num
+        setRepre(newRepre)
+      }}
+    )
+  }
+  
   // create numbers
-  number_to_guest = [0,0,0,0,0].map( num => randomNum(num,10))
-  // create items with the random number and her representation
-  const  items = number_to_guest.map( (num) => {
-    return {num:num, representation: "*"}
-  })
-  console.log(items)
-
-
+  
+ 
   return (
     <div className="container">
 
       {/* representation */}
       <div className="number_repres">
-        {items.map( (item, idx) => {
-          return <NumContainers key={idx} item={item} />
+        {number_to_guest.map( (num, idx) => {
+          return <NumContainers key={idx} num={num} repre={repre[idx]} />
         })}
 
       </div>
       
       {/* guest inputs */}
       <div className="number_user">
-        <input 
-          value={number} 
-          onChange={handleChange}
-        ></input>
-
-        {items.map( (item, idx) => {
-          return <input key={idx} type="text" className={item.representation} />
+        {number_to_guest.map( (num, idx) => {
+          return <InputComponent
+          key={idx}
+          num={idx} 
+          handle={handleChange} />
         })}
       </div>
+      <button onClick={ () => handleValidation(guest, number_to_guest)}>Validate</button>
      
     </div>
   )

@@ -1,9 +1,9 @@
-type itemProps = {item:{num:number, representation:string}}
-const NumContainer = ({item}:itemProps) => {
+type itemProps = { num:number, repre:string }
+const NumContainer = ({num, repre}:itemProps) => {
 
     return (
-        <div className={`num_${item.num}`}>
-            {item.representation}
+        <div className={`num_${num}`}>
+            {repre}
         </div>
     )
 }
